@@ -92,12 +92,22 @@ function results=run_DLT(seq, res_path, bSaveImage)
     end
     L = [ones(opt.maxbasis, 1); (-1) * ones(100, 1)];
     nn = initDLT(tmpl, L);
-    
+    %{
+    load quant_res_128;
+    global useGpu;
+    for i = 1 : 5
+        if useGpu
+            nn.W{i} = gpuArray(W{i});
+        else
+            nn.W{i} = W{i};
+        end
+    end
+    %}
     %{
     tic;
+    quantization_layer = 256;
     %квантование??
-    quantization_layer = 32;
-    disp(["start quantization L = "  num2str(quantization_layer)]);
+    disp(['start quantization L = ' num2str(quantization_layer)]);
     for g = 1 : (nn.n - 1)
         w_max_str = max(abs(nn.W{1,g}));
         w_max = max(abs(w_max_str));
@@ -117,6 +127,8 @@ function results=run_DLT(seq, res_path, bSaveImage)
     end
     time = toc;
     disp(['end quantization ' num2str(time)]);
+    W = nn.W;
+    save(['quant_res_' int2str(quantization_layer)],'W');
     %}
     
     L = [];
@@ -140,43 +152,41 @@ function results=run_DLT(seq, res_path, bSaveImage)
 
       temp = warpimg(frame, param.est', opt.tmplsize);
       pos(:, mod(f - 1, opt.maxbasis) + 1) = temp(:);
-      
       if  param.update
           opts.batchsize = 10;
           % Sample two set of negative samples at different range.
           neg = sampleNeg(frame, param.est', opt.tmplsize, 49, opt, 8);
           neg = [neg sampleNeg(frame, param.est', opt.tmplsize, 50, opt, 4)];
           
-          %nn = nntrain(nn, [pos neg]', [ones(opt.maxbasis + 1, 1); zeros(99, 1)], opts);
-          
-          duration = duration + toc;
+          nn = nntrain(nn, [pos neg]', [ones(opt.maxbasis + 1, 1); zeros(99, 1)], opts);
+      end
+      duration = duration + toc;
       
-          res = affparam2geom(param.est);
-          p(1) = round(res(1));
-          p(2) = round(res(2)); 
-          p(3) = round(res(3) * opt.tmplsize(2));
-          p(4) = round(res(5) * (opt.tmplsize(1) / opt.tmplsize(2)) * p(3));
-          p(5) = res(4);
-          p(1) = p(1) * scaleWidth;
-          p(3) = p(3) * scaleWidth;
-          p(2) = p(2) * scaleHeight;
-          p(4) = p(4) * scaleHeight;
-          paramOld = [p(1), p(2), p(3)/opt.tmplsize(2), p(5), p(4) /p(3) / (opt.tmplsize(1) / opt.tmplsize(2)), 0];
-      
-          reportRes = [reportRes;  affparam2mat(paramOld)]; 
-      
-          tmpl.basis = [pos];   
-          %рисуем следующий кадр
-          drawopt = drawtrackresult(drawopt, f, frame, tmpl, param, []);
-          if (bSaveImage)
-             imwrite(frame2im(getframe(gcf)),sprintf('%s/%04d.jpg',res_path,f));
-          end
-          tic;
-    end
-    duration = duration + toc
-    fprintf('%d frames took %.3f seconds : %.3fps\n',f,duration,f/duration);
-    results.res=reportRes;
-    results.type='ivtAff';
-    results.tmplsize = opt.tmplsize;
-    results.fps = f/duration;
+      res = affparam2geom(param.est);
+      p(1) = round(res(1));
+      p(2) = round(res(2)); 
+      p(3) = round(res(3) * opt.tmplsize(2));
+      p(4) = round(res(5) * (opt.tmplsize(1) / opt.tmplsize(2)) * p(3));
+      p(5) = res(4);
+      p(1) = p(1) * scaleWidth;
+      p(3) = p(3) * scaleWidth;
+      p(2) = p(2) * scaleHeight;
+      p(4) = p(4) * scaleHeight;
+      paramOld = [p(1), p(2), p(3)/opt.tmplsize(2), p(5), p(4) /p(3) / (opt.tmplsize(1) / opt.tmplsize(2)), 0];
+      reportRes = [reportRes;  affparam2mat(paramOld)]; 
+      tmpl.basis = [pos];   
+      %рисуем следующий кадр
+      drawopt = drawtrackresult(drawopt, f, frame, tmpl, param, []);
+      if (bSaveImage)
+         imwrite(frame2im(getframe(gcf)),sprintf('%s/%04d.jpg',res_path,f));
+      end
+      tic;
+   end
+   duration = duration + toc
+   fprintf('%d frames took %.3f seconds : %.3fps\n',f,duration,f/duration);
+   results.res=reportRes;
+   results.type='ivtAff';
+   results.tmplsize = opt.tmplsize;
+   results.fps = f/duration;
+   results.sec = duration;
 end

@@ -108,5 +108,12 @@ for i = 1 : size(d, 1)
     seq.s_frames{i} = [fullPath, d(i).name];
 end
 seq.opt = opt; % к последовательности добавили и обекты ort
-results = run_DLT(seq, '', false);
-save([title '_res'], 'results'); %сохранение результатов 
+
+load Woman_res_online;
+
+results_q = run_DLT(seq, '', false);
+aver_disp_x = abs(results.res(:,1)-results_q.res(:,1));
+aver_disp_y = abs(results.res(:,2)-results_q.res(:,2));
+results_q.mean_x = mean(aver_disp_x);
+results_q.mean_y = mean(aver_disp_y);
+save([title '_res_L=512'], 'results_q'); %сохранение результатов 
