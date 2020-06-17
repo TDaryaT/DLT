@@ -11,7 +11,7 @@ Using this tracker, you can track the trajectory of an object on a set of images
 
 I advise you to read the article on the [DLT](https://papers.nips.cc/paper/5192-learning-a-deep-compact-image-representation-for-visual-tracking) tracker and the article on [the weighting coefficient quantization algorithm](http://www.mathnet.ru/php/archive.phtml?wshow=paper&jrnid=pdm&paperid=676&option_lang=rus) before starting work.
 
-Also, you can familiarize yourself with the [interesting work](https://ieeexplore.ieee.org/document/6619156) of comparing trackers and with sequences designed specifically for such programs.
+Also, you can familiarize yourself with the [work](https://ieeexplore.ieee.org/document/6619156) of comparing trackers and with sequences designed specifically for such programs.
 
 From [here](http://cvlab.hanyang.ac.kr/tracker_benchmark/datasets.html) you can take sets of video frames for testing the tracker.
 
