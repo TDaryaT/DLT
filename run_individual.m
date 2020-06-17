@@ -111,9 +111,10 @@ seq.opt = opt; % к последовательности добавили и о�
 
 load Woman_res_online;
 
-results_q = run_DLT(seq, '', false);
-aver_disp_x = abs(results.res(:,1)-results_q.res(:,1));
-aver_disp_y = abs(results.res(:,2)-results_q.res(:,2));
-results_q.mean_x = mean(aver_disp_x);
-results_q.mean_y = mean(aver_disp_y);
-save([title '_res_L=512'], 'results_q'); %сохранение результатов 
+%results_q = run_DLT(seq, '', false);
+load Woman_res_new_L=256;
+results_q.aver_disp_x = abs(results.res(:,1)-results_q.res(:,1));
+results_q.aver_disp_y = abs(results.res(:,2)-results_q.res(:,2));
+results_q.mean_x = mean(results_q.aver_disp_x);
+results_q.mean_y = mean(results_q.aver_disp_y);
+save([title '_res_new_L=256'], 'results_q'); %сохранение результатов 

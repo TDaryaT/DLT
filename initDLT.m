@@ -1,11 +1,11 @@
 function newNN = initDLT(tmpl, L)
     %load pretrain;
-    load quant_res_512;
+    load quant_res_new_2;
     global useGpu;
     newNN = nnsetup([1024 2560 1024 512 256 1]);
     %{
     tic;
-    quantization_layer = 1024;
+    quantization_layer = 256;
     %квантование??
     disp(['start quantization L = ' num2str(quantization_layer)]);
     for g = 1 : 4
@@ -17,9 +17,9 @@ function newNN = initDLT(tmpl, L)
         for d = 1 : colich_2
             for e = 1 : colich
                 for k = 1 : quantization_layer
-                   w = W{1,g}(d,e);
+                   w = abs(W{1,g}(d,e));
                     if w > (k-1)*delta && w < k*delta
-                        W{1,g}(d,e) = (k-1)*delta*sign(w);
+                        W{1,g}(d,e) = (k-1)*delta*sign(W{1,g}(d,e));
                     end
                 end
             end
@@ -27,7 +27,7 @@ function newNN = initDLT(tmpl, L)
     end
     time = toc;
     disp(['end quantization ' num2str(time)]);
-    save(['quant_res_' int2str(quantization_layer)],'W');
+    save(['quant_res_new_' int2str(quantization_layer)],'W');
     %}
     for i = 1 : 4
         if useGpu

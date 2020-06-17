@@ -82,7 +82,6 @@ function results=run_DLT(seq, res_path, bSaveImage)
     if (bSaveImage)
         imwrite(frame2im(getframe(gcf)),sprintf('%s0000.jpg',res_path));    
     end
-    
     % track the sequence from frame 2 onward
     % отслеживание объекта от 2 изображения и последующих
     duration = 0;
@@ -136,7 +135,7 @@ function results=run_DLT(seq, res_path, bSaveImage)
     pos(:, opt.maxbasis + 1) = tmpl.basis(:, 1);
     opts.numepochs = 5 ;
     
-    for f = 1:size(seq.s_frames,1)  
+    for f = 1:size(seq.s_frames,1)
       tic;
       frame = imread(seq.s_frames{f});
       if size(frame,3)==3
@@ -177,6 +176,10 @@ function results=run_DLT(seq, res_path, bSaveImage)
       tmpl.basis = [pos];   
       %рисуем следующий кадр
       drawopt = drawtrackresult(drawopt, f, frame, tmpl, param, []);
+      
+      if f == 35 || f == 1
+        yu = input('s');
+      end
       if (bSaveImage)
          imwrite(frame2im(getframe(gcf)),sprintf('%s/%04d.jpg',res_path,f));
       end
