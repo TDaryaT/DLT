@@ -105,7 +105,7 @@ dataPath = '/home/dasha/Desktop/диплом/individual_siq/';
 * Sequence options are in "swich":
 
 ```
-title = 'Woman';  
+title = 'Car4';  
 ```
 
 Next we run the file "run_individual.m" and you can see the frame-by-frame 
@@ -118,4 +118,4 @@ output of the sequence on which the trajectory of the object will be visible wit
 
 * *Tlepbergenova Darya * - *MMF NSU 2020* 
 
-See also the exhaust thesis on [overleaf](https://github.com/TDaryaT/Deep-Learning-Tracker).
+See also the text of the Undergraduate work on [overleaf](https://github.com/TDaryaT/Deep-Learning-Tracker).
