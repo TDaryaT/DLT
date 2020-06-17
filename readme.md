@@ -1,5 +1,7 @@
 # Deep Learning Model for Visual Tracking
 
+Undergraduate work.
+
 Implementation of the dlt tracker in MATLAB and testing the algorithm for quantizing weighting coefficients.
 Using this tracker, you can track the trajectory of an object on a set of images in real time. 
 
@@ -31,7 +33,21 @@ Next, you need to change "run_individual.m", namely:
 
 * path with the selected test sequence, namely with the folder in which the image, format jpg or png (variable: "datePath")
 
+```
+dataPath = 'name_data_path';
+```
+
 * If you want to use the GPU to get better results, change the "useGpu" variable to true.
+
+```
+useGpu = true;
+```
+
+* If your sequence is in the statement "swich", change the value of the title variable to the desired one.
+
+```
+title = 'name_folder\title'; 
+```
 
 * If you want to test your sequence, you need to enter the parameters in the switch statement, as
 
@@ -67,21 +83,39 @@ the dynamics distribution, that is how much we expect the target
 
    affsig(6) = skew angle
 
+## About changing the number of quantization levels
+
+The quantization algorithm is implemented in the initialization of the network in the file "initDLT.m". 
+To change the quantization level, it is necessary to excuse the loaded file:
+
+```
+ load quant_res_new_NUMBER;
+```
+
 ## Running by example
 
-download the set Car4 to your computer ....
+download the set Car4 to your computer and follow all the instructions described above, i.e.
 
-## Built With
+* In my case, the folder where the sequence is located is here:
 
-* [Pycharm](https://www.jetbrains.com/ru-ru/pycharm/) - development environment used
-* [analog](https://github.com/lyjh/dlt_beta) - on matlab
+```
+dataPath = '/home/dasha/Desktop/диплом/individual_siq/';
+```
+
+* Sequence options are in "swich":
+
+```
+title = 'Woman';  
+```
+
+Next we run the file "run_individual.m" and you can see the frame-by-frame 
+output of the sequence on which the trajectory of the object will be visible with a red frame.
+
+![Image](https://github.com/TDaryaT/DLT/blob/master/img1.jpg)
+
 
 ## Authors
 
 * *Tlepbergenova Darya * - *MMF NSU 2020* 
 
-See also the  [article](https://papers.nips.cc/paper/5192-learning-a-deep-compact-image-representation-for-visual-tracking.pdf).
-
-
-Deep Learning Tracker to track the trajectory of the selected object. Undergraduate work.
-
+See also the exhaust thesis on [overleaf](https://github.com/TDaryaT/Deep-Learning-Tracker).
